@@ -1,23 +1,50 @@
-const bookRepository = require("./bookRepository");
-const bookService = require("./bookService");
+function withErrorHandling(api) {
+  const apiWithErrorHandling = {};
+  Object.keys(api).forEach(function(key) {
+    const originalFn = api[key];
+    apiWithErrorHandling[key] = wrapWithTryCatch(originalFn);
+  });
+  return apiWithErrorHandling;
+}
 
-module.exports = {
-    async createOrUpdate(req, res, next) {
-        const {title, authors, isbn, description} = req.body;
-        try {
-            await bookService.createOrUpdate({title, authors, isbn, description});
-            res.redirect("/book/" + isbn);
-        } catch (e) {
-            next(e);
-        }
-    },
-    async details(req, res, next) {
-        try {
-            const isbn = req.params.isbn;
-            const book = await bookRepository.findOne(isbn);
-            res.json(book);
-        } catch(e) {
-            next(e);
+function wrapWithTryCatch(fn) {
+  return async function(req, res, next) {
+    try {
+      return await fn(req, res, next);
+    } catch (e) {
+      next(e);
+    }
+  }
+}
+
+module.exports = function bookControllerFactory({ bookRepository, bookService }) {
+  return withErrorHandling({
+      async createOrUpdate(req, res, next) {
+        const book = req.body;
+        await bookService.createOrUpdate(book);
+        res.redirect("/book/" + book.isbn);
+      },
+      async details(req, res, next) {
+        const isbn = req.params.isbn;
+        const nolayout = req.query.nolayout;
+        const layout = nolayout == null ? "layout": "";
+        const book = await bookRepository.findOne(isbn);
+        
+        if (book) {
+            res.format({
+                'text/html'() {
+                    res.render("book", {book, layout});
+                },
+                'application/json'() {
+                    res.json(book);
+                },
+                'default'() {
+                    res.json(book);
+                }
+            });
+        } else {
+            next();
         }
     }
+  });
 };

@@ -2,8 +2,12 @@ const express = require('express');
 const bookRoutes = require('./bookRoutes');
 const { clientError, serverError } = require('./error');
 const bodyParser = require('body-parser');
+const path = require("path");
 
 const app = express();
+
+app.set("views", path.join(__dirname, "views"));
+app.set("view engine", "hbs");
 
 app.use(bodyParser.json());
 
