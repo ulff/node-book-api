@@ -1,0 +1,10 @@
+{
+  "scripts": {
+    "start": "node src/server.js",
+    "watch": "nodemon npm start"
+  },
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "express": "^4.16.3"
+  }
+}
