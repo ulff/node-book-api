@@ -3,7 +3,8 @@ const qs = require("querystring");
 const links = {
   resources: {
     BOOK: "/book/:isbn",
-    BOOK_COLLECTION: "/book"
+    BOOK_COLLECTION: "/book",
+    SEARCH: "/search"
   },
   bookLink(isbn) {
     return links.resources.BOOK.replace(":isbn", isbn);
@@ -13,6 +14,9 @@ const links = {
         sortById: link(links.resources.BOOK_COLLECTION, {sortBy: "id", sort: reverse(sort)}),
         sortByTitle: link(links.resources.BOOK_COLLECTION, {sortBy: "title", sort: reverse(sort)})
     };
+  },
+  paginationLink({start, sortBy, sort}) {
+    return link(links.resources.BOOK_COLLECTION, {start, sortBy, sort});
   }
 };
 
