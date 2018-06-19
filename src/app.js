@@ -27,7 +27,7 @@ module.exports = async function() {
         res.send("Hello world!");
     });
 
-    app.use("/book", bookRoutes);
+    app.use("/", bookRoutes);
 
     app.use(clientError);
     app.use(serverError);

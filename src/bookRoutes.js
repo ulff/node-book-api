@@ -3,6 +3,8 @@ const bookRepositoryFactory = require("./bookRepository");
 const bookServiceFactory = require("./bookService");
 const bookControllerFactory = require("./bookController");
 const {Router} = require('express');
+const layoutDecorator = require('./layoutDecorator');
+const { BOOK, BOOK_COLLECTION } = require('./links').resources;
 
 module.exports = async function routerFactory() {
     const router = Router();
@@ -12,9 +14,10 @@ module.exports = async function routerFactory() {
     const bookService = bookServiceFactory(bookRepository);
     const {createOrUpdate, details, getList} = bookControllerFactory({bookRepository, bookService});
 
-    router.post("/", createOrUpdate);
-    router.get("/:isbn", details);
-    router.get("/", getList);
+    router.use(layoutDecorator);
+    router.post(BOOK_COLLECTION, createOrUpdate);
+    router.get(BOOK, details);
+    router.get(BOOK_COLLECTION, getList);
 
     return router;
 };
