@@ -1,3 +1,5 @@
+const responses = require('./responses');
+
 function withErrorHandling(api) {
   const apiWithErrorHandling = {};
   Object.keys(api).forEach(function(key) {
@@ -22,7 +24,7 @@ module.exports = function bookControllerFactory({ bookRepository, bookService })
       async createOrUpdate(req, res, next) {
         const book = req.body;
         await bookService.createOrUpdate(book);
-        res.redirect("/book/" + book.isbn);
+        responses.createOrUpdate(book.isbn, res);
       },
       async details(req, res, next) {
         const isbn = req.params.isbn;
@@ -30,21 +32,11 @@ module.exports = function bookControllerFactory({ bookRepository, bookService })
         const layout = nolayout == null ? "layout": "";
         const book = await bookRepository.findOne(isbn);
         
-        if (book) {
-            res.format({
-                'text/html'() {
-                    res.render("book", {book, layout});
-                },
-                'application/json'() {
-                    res.json(book);
-                },
-                'default'() {
-                    res.json(book);
-                }
-            });
-        } else {
-            next();
-        }
-    }
+        responses.details({book, layout}, res, next);   
+      },
+      async getList(req, res) {
+        const books = await bookRepository.findAll();
+        responses.list(books, res);
+      }
   });
 };

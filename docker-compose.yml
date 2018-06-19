@@ -17,3 +17,11 @@ services:
       - "3000:3000"
       - "9229:9229"
     command: npm run watch
+  db-import:
+    env_file: .env
+    image: mongo
+    depends_on:
+      - db
+    volumes:
+      - ./data:/data
+    command: ./data/import.sh

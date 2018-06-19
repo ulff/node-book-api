@@ -1,14 +1,8 @@
-const MongoClient = require("mongodb").MongoClient;
-const url = "mongodb://localhost:27017/booksapi";
-let booksPromise = MongoClient.connect(url, {
-    bufferMaxEntries: 0
-}).then(function (client) {
-    return client.db().collection("books");
-});
+module.exports = function bookRepositoryFactory(db) {
+  const books = db.collection("books");
 
-module.exports = {
+  return {
     async createOrUpdate({title, slug, authors, isbn, description}) {
-        const books = await booksPromise;
         return books.updateOne(
             {isbn: isbn},
             {$set : {title, slug, authors, isbn, description} },
@@ -16,10 +10,15 @@ module.exports = {
         );
     },
     async findOne(isbn) {
-        const books = await booksPromise;
         return books.findOne(
             {isbn},
             { projection: {_id: 0} }
         );
+    },
+    async findAll() {
+      return books
+        .find()
+        .toArray();
     }
+  }
 };

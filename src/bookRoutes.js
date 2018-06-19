@@ -1,9 +1,20 @@
-const router = require('express').Router();
-const bookRepository = require("./bookRepository");
-const bookService = require("./bookService");
-const {createOrUpdate, details} = require("./bookController")({ bookRepository, bookService });
+const connectionFactory = require("./connection");
+const bookRepositoryFactory = require("./bookRepository");
+const bookServiceFactory = require("./bookService");
+const bookControllerFactory = require("./bookController");
+const {Router} = require('express');
 
-router.post("/", createOrUpdate);
-router.get("/:isbn", details);
+module.exports = async function routerFactory() {
+    const router = Router();
 
-module.exports = router;
+    const db = await connectionFactory("mongodb://localhost:27017/booksapi");
+    const bookRepository = bookRepositoryFactory(db);
+    const bookService = bookServiceFactory(bookRepository);
+    const {createOrUpdate, details, getList} = bookControllerFactory({bookRepository, bookService});
+
+    router.post("/", createOrUpdate);
+    router.get("/:isbn", details);
+    router.get("/", getList);
+
+    return router;
+};
