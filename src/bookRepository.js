@@ -15,10 +15,12 @@ module.exports = function bookRepositoryFactory(db) {
             { projection: {_id: 0} }
         );
     },
-    async findBy({sort, sortBy}) {
+    async findBy({sort, sortBy, start, limit}) {
       return books
         .find()
         .sort({[sortBy]: sort === 'asc' ? 1 : -1}) // <- dynamiczna ewaluacja (computed properties)
+        .skip(start * limit)
+        .limit(limit)
         .toArray();
     }
   }

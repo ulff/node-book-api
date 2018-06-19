@@ -21,10 +21,10 @@ module.exports = {
         next();
     }
   },
-  list(books, res) {
+  list({books, listCriteria}, res) {
     res.format({
         'text/html'() {
-            res.render("books", booksViewModel.html({books, layout: res.locals.layout}));
+            res.render("books", booksViewModel.html({books, listCriteria, layout: res.locals.layout}));
         },
         'application/json'() {
             res.json(books);

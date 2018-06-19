@@ -1,4 +1,5 @@
 const responses = require('./responses');
+const userInput = require('./userInput');
 
 function withErrorHandling(api) {
   const apiWithErrorHandling = {};
@@ -33,9 +34,10 @@ module.exports = function bookControllerFactory({ bookRepository, bookService })
         responses.details(book, res, next);   
       },
       async getList(req, res) {
-        const listCriteria = {sort, sortBy} = req.query;
+        const {sort, sortBy, start} = req.query;
+        const listCriteria = userInput.sanitizeListCriteria({sort, sortBy, start});
         const books = await bookRepository.findBy(listCriteria);
-        responses.list(books, res);
+        responses.list({books, listCriteria}, res);
       }
   });
 };

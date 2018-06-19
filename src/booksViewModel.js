@@ -1,8 +1,8 @@
-const { bookLink } = require('./links');
+const { bookLink, sortLinks } = require('./links');
 
 module.exports = {
-  html({books, layout}) {
-    return {books: withLinks(books), layout}
+  html({books, listCriteria, layout}) {
+    return {books: withLinks(books), sortLinks: sortLinks(listCriteria.sort), layout};
   }
 };
 
