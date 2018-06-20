@@ -6,7 +6,8 @@
     "test:component": "mocha --exit test/component",
     "test": "npm run test:unit && npm run test:component",
     "format": "prettier --write \"{src,test}/**/*.js\"",
-    "coverage": "nyc --reporter=html npm test"
+    "coverage": "nyc --reporter=html npm test",
+    "precommit": "npm run format && npm run test:unit"
   },
   "dependencies": {
     "body-parser": "^1.18.3",
@@ -16,6 +17,7 @@
     "mongodb": "^3.0.10"
   },
   "devDependencies": {
+    "husky": "^0.14.3",
     "i": "^0.3.6",
     "mocha": "^5.2.0",
     "npm": "^6.1.0",
