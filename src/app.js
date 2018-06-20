@@ -1,11 +1,11 @@
 const express = require('express');
-const bookRoutesFactory = require('./bookRoutes');
+const bookRoutesFactory = require('./book/bookRoutes');
 const { clientError, serverError } = require('./error');
 const bodyParser = require('body-parser');
 const path = require("path");
 
-module.exports = async function() {
-    const bookRoutes = await bookRoutesFactory();
+module.exports = async function(config) {
+    const bookRoutes = await bookRoutesFactory(config);
     const app = express();
 
     app.set("views", path.join(__dirname, "views"));

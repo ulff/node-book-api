@@ -47,6 +47,27 @@ module.exports = function bookRepositoryFactory(db) {
               }
           }
       );
+    },
+    topAuthors() {
+        return books.aggregate([
+            {
+                $project: {
+                    authors: 1,
+                    isbn: 1
+                }
+            },
+            {$unwind: "$authors"},
+            {$match: {authors: {$exists: true, $ne: ""}}},
+            {
+                $group: {
+                    _id: "$authors",
+                    books: {$push: "$isbn"},
+                    bookCount: {$sum: 1}
+                }
+            },
+            {$sort: {bookCount: -1}},
+            {$limit: 10}
+        ]).toArray();
     }
   }
 };

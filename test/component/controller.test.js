@@ -1,12 +1,13 @@
 const assert = require("assert");
 const httpClient = require('supertest');
-// const app = require('../../src/app');
-const bookControllerFactory = require('../../src/bookController');
+const config = require("../../config");
+
+const bookControllerFactory = require('../../src/book/bookController');
 
 describe('Book inventory', function (done) {
     it('creates a book', async function () {
         // given
-        const app = await require('../../src/app')();
+        const app = await require('../../src/app')(config);
         const bookService = {
             async createOrUpdate(book) {
                 bookService.createOrUpdate.invokedWith = book;
@@ -35,7 +36,7 @@ describe('Book inventory', function (done) {
 
     // it('will not create a book', async function () {
     //     // given
-    //     const app = await require('../../src/app')();
+    //     const app = await require('../../src/app')(config);
     //     const error = new Error("Something not worked");
     //     const bookService = {
     //         async createOrUpdate(book) {

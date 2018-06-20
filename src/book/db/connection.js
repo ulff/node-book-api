@@ -1,9 +1,10 @@
 const MongoClient = require("mongodb").MongoClient;
 
-module.exports = async function(url) {
-  const dbConnection = await MongoClient.connect(url, {
+module.exports = async function(config) {
+  const dbConnection = await MongoClient.connect(config.db, {
       bufferMaxEntries: 0
   });
 
   return dbConnection.db();
 }
+

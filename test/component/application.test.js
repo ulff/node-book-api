@@ -1,14 +1,16 @@
 const assert = require("assert");
 const httpClient = require('supertest');
+const config = require("../../config");
 
 describe('Book inventory', function () {
     it('allows to stock up the items', async function () {
-        const app = await require('../../src/app')();
+        const app = await require('../../src/app')(config);
         const request =  httpClient(app);
 
         // CREATE
         const createResult = await request
             .post('/book')
+            .set('Authorization', `Bearer: ${config.valid_token}`)
             .send({
                 title: "JavaScript in Action",
                 authors: ["James Smith", "Kate Donovan"],

@@ -1,5 +1,5 @@
-const responses = require('./responses');
-const userInput = require('./userInput');
+const responses = require('../book/response/responses');
+const userInput = require('../book/request/userInput');
 
 function withErrorHandling(api) {
   const apiWithErrorHandling = {};
@@ -43,6 +43,10 @@ module.exports = function bookControllerFactory({ bookRepository, bookService })
         const {q} = req.query;
         const books = await bookRepository.query(userInput.sanitizeQuery(q))  ;
         responses.list({books}, res);
+      },
+      async topAuthorsReport(req, res, next) {
+        const report = await bookRepository.topAuthors();  
+        res.json(report);
       }
   });
 };

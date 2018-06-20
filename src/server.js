@@ -1,9 +1,9 @@
-const appFactory = require("./app");
+const config = require("./config");
 
 (async function main() {
-  const app = await appFactory();
+  const app = await require("./app")(config);
 
-  app.listen(3000, function () {
-    console.log("Listening on port: " + 3000);
+  app.listen(config.port, function () {
+    console.log("Listening on port: " + config.port);
   })
 })();
