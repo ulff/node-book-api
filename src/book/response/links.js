@@ -12,17 +12,23 @@ const links = {
   },
   sortLinks(sort) {
     return {
-        sortById: link(links.resources.BOOK_COLLECTION, {sortBy: "id", sort: reverse(sort)}),
-        sortByTitle: link(links.resources.BOOK_COLLECTION, {sortBy: "title", sort: reverse(sort)})
+      sortById: link(links.resources.BOOK_COLLECTION, {
+        sortBy: "id",
+        sort: reverse(sort)
+      }),
+      sortByTitle: link(links.resources.BOOK_COLLECTION, {
+        sortBy: "title",
+        sort: reverse(sort)
+      })
     };
   },
-  paginationLink({start, sortBy, sort}) {
-    return link(links.resources.BOOK_COLLECTION, {start, sortBy, sort});
+  paginationLink({ start, sortBy, sort }) {
+    return link(links.resources.BOOK_COLLECTION, { start, sortBy, sort });
   }
 };
 
 function link(path, queryParams) {
-  return path + "?" + qs.stringify(queryParams)
+  return path + "?" + qs.stringify(queryParams);
 }
 
 function reverse(sort) {
